@@ -1,13 +1,14 @@
+//==========================================================================
+//    Personajes de los Simpson
+//==========================================================================
 let img_inicio, img_instructiones;
+let sonido;
 let estado = "inicio";
-
 // coordenadas del botón (puedes ajustar)
-let btnX = 400;
-let btnY = 350;
 let btnW = 200;
 let btnH = 80;
 
-// Nombres
+// Nombres de personajes
 let nombres =[
               "Homero Simpson",
               "Marge Bouvier",
@@ -21,7 +22,7 @@ let nombres =[
               "Nick Riviera",
               "Nelson Muntz",
               "Chester J. Lampwick",
-              "Rafa Gorgori",
+              "Rafa Gorgory",
               "Le vende un pony a Homero",
               "Jeremías Springfield",
               "Roger Meyers Jr.",
@@ -34,6 +35,19 @@ let nombres =[
               "Gordo Tony",
               "Willie",
               "Michael Jackson",
+              "Hombre Radioactivo",
+              "Krusty",
+              "Jefe Gorgory",
+              "Apu Nahasapeemapetilon",
+              "Manjula",
+              "Martin Prince",
+              "Rainier Wolfcastle",
+              "Profesor Lombardo",
+              "Juan Topo",
+              "Abraham Simpson",
+              "Kent Brockman",
+              "Lenny",
+              "Serpiente",
               ]
 
 // Coordenadas de personajes
@@ -63,25 +77,40 @@ let coordenadas =[
               [165, 285], // Gordo Tony
               [310, 105], // Willie
               [355, 115], // Michael Jackson
+              [575, 155], // Hombre Radioactivo
+              [605, 260], // Krusty
+              [605, 212], // Jefe Gorgory
+              [287, 372], // Apu
+              [187, 340], // Manjula Nahasapeemapetilon
+              [107, 360], // Manrtin Prince
+              [127, 380], // Rainier Wolfcastle
+              [192, 375], // "Profesor Lombardo"
+              [182, 420], // "Juan Topo"
+              [682, 415], // "Abraham Simpson"
+              [652, 405], // "Kent Brockman"
+              [625, 400], // "Lenny"
+              [565, 397], // "Serpiente"
             ]
 
+let bandera = 0;
+let genericox = 565;
+let genericoy = 397;
 
-let genericox = 355
-let genericoy = 115
-
+let index_per_1=0, index_per_2=1, index_per_3=2, index_per_4=3, index_per_5=4;
+let coordX_per_1, coordY_per_1, coordX_per_2, coordY_per_2,coordX_per_3,coordY_per_3,coordX_per_4,coordY_per_4,coordX_per_5,coordY_per_5;
 //Contador
-let contador=0
+let contador=0;
 let encontrado1 = 0,encontrado2 = 0,encontrado3 = 0,encontrado4 = 0,encontrado5 = 0; 
-let personaje1=0, personaje2=1, personaje3=2, personaje4=3, personaje5=4;
-let coordx_personaje_1,coordy_personaje_1,coordx_personaje_2,coordy_personaje_2,coordx_personaje_3,coordy_personaje_3,coordx_personaje_4,coordy_personaje_4,coordx_personaje_5,coordy_personaje_5; 
-let sonido;
 
+//=================================================================
 function preload() {
   img_inicio = loadImage("assets/background.jpg");
   img_juego = loadImage("assets/simpson.jpg");
+  img_trans = loadImage("assets/imagentrans.png");
   sonido = loadSound("assets/introlossimpson.mp3");
-}
+  }
 
+//=================================================================
 function setup() {
   createCanvas(img_inicio.width + 350, img_inicio.height);
   noFill();
@@ -89,6 +118,7 @@ function setup() {
   strokeWeight(1);
   }
 
+//=================================================================
 function draw() {
   background(255,217,15);
   if (estado === "inicio") {pantallaInicio();}
@@ -96,81 +126,96 @@ function draw() {
   else if (estado === "resultado") {pantallaResultado();}
   }
 
-// ----------------------
-
+//=================================================================
 function pantallaInicio() {
   //pantalla = img_inicio;
   image(img_inicio, 0, 0);
 
-  coordx_personaje_1=coordenadas[personaje1][0];
-  coordy_personaje_1=coordenadas[personaje1][1];
+  coordX_per_1=coordenadas[index_per_1][0];
+  coordY_per_1=coordenadas[index_per_1][1];
 
-  coordx_personaje_2=coordenadas[personaje2][0];
-  coordy_personaje_2=coordenadas[personaje2][1];
+  coordX_per_2=coordenadas[index_per_2][0];
+  coordY_per_2=coordenadas[index_per_2][1];
 
-  coordx_personaje_3=coordenadas[personaje3][0];
-  coordy_personaje_3=coordenadas[personaje3][1];
+  coordX_per_3=coordenadas[index_per_3][0];
+  coordY_per_3=coordenadas[index_per_3][1];
   
-  coordx_personaje_4=coordenadas[personaje4][0];
-  coordy_personaje_4=coordenadas[personaje4][1];
+  coordX_per_4=coordenadas[index_per_4][0];
+  coordY_per_4=coordenadas[index_per_4][1];
 
-  coordx_personaje_5=coordenadas[personaje5][0];
-  coordy_personaje_5=coordenadas[personaje5][1];
+  coordX_per_5=coordenadas[index_per_5][0];
+  coordY_per_5=coordenadas[index_per_5][1];
   
   textAlign(CENTER, CENTER);
   textSize(30);
   text("Personajes de Los Simpson", (img_inicio.width + 260) / 2, 80);
-  text("Encuentra a: ", (img_inicio.width + 260) / 2, 140);
-  text(nombres[personaje1] + " ", (img_inicio.width + 260) / 2, 180);
-  text(nombres[personaje2] + " ", (img_inicio.width + 260) / 2, 210);
-  text(nombres[personaje3] + " ", (img_inicio.width + 260) / 2, 240);
-  text(nombres[personaje4] + " ", (img_inicio.width + 260) / 2, 270);
-  text(nombres[personaje5] + " ", (img_inicio.width + 260) / 2, 300);
+  text("Encuentra a:", (img_inicio.width + 260) / 2, 140);
+  text(nombres[index_per_1], (img_inicio.width + 260) / 2, 180);
+  text(nombres[index_per_2], (img_inicio.width + 260) / 2, 210);
+  text(nombres[index_per_3], (img_inicio.width + 260) / 2, 240);
+  text(nombres[index_per_4], (img_inicio.width + 260) / 2, 270);
+  text(nombres[index_per_5], (img_inicio.width + 260) / 2, 300);
 
   // botón
   fill(100, 200, 255);
   rect(500, 350, btnW, btnH, 10);
-  
-  //rect(700, 350, btnW, btnH, 10);
 
   fill(0);
   textSize(27);
   text("Inicio", 500 + btnW / 2, 350 + btnH / 2);
-  
-  //text("Aleatorio", 700 + btnW / 2, 350 + btnH / 2);
 }
 
+//=================================================================
 function pantallaInstrucciones() {
   image(img_juego, 0, 0);
+  //image(img_trans, 0, 0);
 
   noStroke();
-  fill(0);
+
   textAlign(LEFT, CENTER);
   textSize(15);
-  
+  fill(0);
   text("Encuentra a: ", img_inicio.width, 100);
-  text(nombres[personaje1] + " ", img_inicio.width, 150);
-  text(nombres[personaje2] + " ", img_inicio.width, 200);
-  text(nombres[personaje3] + " ", img_inicio.width, 250);
-  text(nombres[personaje4] + " ", img_inicio.width, 300);
-  text(nombres[personaje5] + " ", img_inicio.width, 350);
-
+  
+  fill(0);
+  if(encontrado1===1){fill(0,200,100);}
+  text(nombres[index_per_1] + " ", img_inicio.width, 150);
+  
+  fill(0);
+  if(encontrado2===1){fill(0,200,100);}
+  text(nombres[index_per_2] + " ", img_inicio.width, 200);
+  
+  fill(0);
+  if(encontrado3===1){fill(0,200,100);}
+  text(nombres[index_per_3] + " ", img_inicio.width, 250);
+  
+  fill(0);
+  if(encontrado4===1){fill(0,200,100);}
+  text(nombres[index_per_4] + " ", img_inicio.width, 300);
+  
+  fill(0);
+  if(encontrado5===1){fill(0,200,100);}
+  text(nombres[index_per_5] + " ", img_inicio.width, 350);
+  fill(0);
   strokeWeight(1);
   
   rectwidth = 50
   rectheight = 50
 
-  if(encontrado1===1){resalta_personaje(coordx_personaje_1,coordy_personaje_1,rectwidth,rectheight);}
-  if(encontrado2===1){resalta_personaje(coordx_personaje_2,coordy_personaje_2,rectwidth,rectheight);}
-  if(encontrado3===1){resalta_personaje(coordx_personaje_3,coordy_personaje_3,rectwidth,rectheight);}
-  if(encontrado4===1){resalta_personaje(coordx_personaje_4,coordy_personaje_4,rectwidth,rectheight);}
-  if(encontrado5===1){resalta_personaje(coordx_personaje_5,coordy_personaje_5,rectwidth,rectheight);}
+  if(encontrado1===1){resalta_personaje(coordX_per_1,coordY_per_1,rectwidth,rectheight);}
+  if(encontrado2===1){resalta_personaje(coordX_per_2,coordY_per_2,rectwidth,rectheight);}
+  if(encontrado3===1){resalta_personaje(coordX_per_3,coordY_per_3,rectwidth,rectheight);}
+  if(encontrado4===1){resalta_personaje(coordX_per_4,coordY_per_4,rectwidth,rectheight);}
+  if(encontrado5===1){resalta_personaje(coordX_per_5,coordY_per_5,rectwidth,rectheight);}
 
   // Genérico
-  //resalta_personaje(genericox,genericoy,rectwidth,rectheight);
+  if(bandera===1){resalta_personaje(genericox,genericoy,rectwidth,rectheight);}
+  
+  //
+
 }
 
-
+//=================================================================
 function pantallaResultado() {
   //pantalla = img_inicio;
   image(img_inicio, 0, 0);
@@ -183,14 +228,14 @@ function pantallaResultado() {
   
   // botón
   fill(100, 200, 255);
-  rect(btnX+100, btnY, btnW, btnH, 10);
+  rect(400+100, 350, btnW, btnH, 10);
 
   fill(0);
   textSize(20);
-  text("Jugar de nuevo", btnX + 100 + btnW / 2, btnY + btnH / 2);
+  text("Jugar de nuevo", 400 + 100 + btnW / 2, 350 + btnH / 2);
 }
 
-// ----------------------
+//=================================================================
 function mousePressed() {
   if (estado === "inicio") {
     // detectar click dentro del botón
@@ -202,7 +247,6 @@ function mousePressed() {
     ) {
       estado = "instrucciones";
     }
-  
     /*
     if (
       mouseX > 700 &&
@@ -213,96 +257,43 @@ function mousePressed() {
       aleatorio_personajes();
       }
       */
-  
   }
   
   if (estado === "instrucciones"){
 
-    if (
-      mouseX > coordx_personaje_1 &&
-      mouseX < coordx_personaje_1 + rectwidth &&
-      mouseY > coordy_personaje_1 &&
-      mouseY < coordy_personaje_1 + rectheight
-    ){
-      if(encontrado1==0){
-        encontrado1=1;
-        contador+=1;}
-      //encontrado1=1;
-      //contador+=1;
-      if(contador===5){
-        estado="resultado";
-        sonido.play();}}
+    encontrado1=revisa_posicion(1);
+    if(contador===5){
+      estado="resultado";
+      sonido.play();}
 
-    if (
-      mouseX > coordx_personaje_2 &&
-      mouseX < coordx_personaje_2 + rectwidth &&
-      mouseY > coordy_personaje_2 &&
-      mouseY < coordy_personaje_2 + rectheight
-    ){
-      if(encontrado2==0){
-        encontrado2=1;
-        contador+=1;}      
-      //encontrado2=1;
-      //contador+=1;
-      if(contador===5){
-        estado="resultado";
-        sonido.play();}}
+    encontrado2=revisa_posicion(2);
+    if(contador===5){
+      estado="resultado";
+      sonido.play();}
 
-    if (
-      mouseX > coordx_personaje_3 &&
-      mouseX < coordx_personaje_3 + rectwidth &&
-      mouseY > coordy_personaje_3 &&
-      mouseY < coordy_personaje_3 + rectheight
-    ){
-      if(encontrado3==0){
-        encontrado3=1;
-        contador+=1;} 
-      //encontrado3=1;
-      //contador+=1;
-      if(contador===5){
-        estado="resultado";
-        sonido.play();}}
+    encontrado3=revisa_posicion(3);
+    if(contador===5){
+      estado="resultado";
+      sonido.play();}
 
-    if (
-      mouseX > coordx_personaje_4 &&
-      mouseX < coordx_personaje_4 + rectwidth &&
-      mouseY > coordy_personaje_4 &&
-      mouseY < coordy_personaje_4 + rectheight
-    ){
-      if(encontrado4==0){
-        encontrado4=1;
-        contador+=1;} 
-      //encontrado4=1;
-      //contador+=1;
-      if(contador===5){
-        estado="resultado";
-        sonido.play();}}
+    encontrado4=revisa_posicion(4);
+    if(contador===5){
+      estado="resultado";
+      sonido.play();}
 
-
-    if (
-      mouseX > coordx_personaje_5 &&
-      mouseX < coordx_personaje_5 + rectwidth &&
-      mouseY > coordy_personaje_5 &&
-      mouseY < coordy_personaje_5 + rectheight
-    ){
-      if(encontrado5==0){
-        encontrado5=1;
-        contador+=1;} 
-      //encontrado5=1;
-      //contador+=1;
-      if(contador===5){
-        estado="resultado";
-        sonido.play();}}
-
+    encontrado5=revisa_posicion(5);
+    if(contador===5){
+      estado="resultado";
+      sonido.play();}
   }
 
   if (estado === "resultado") {
     // detectar click dentro del botón
     if (
-      mouseX > btnX + 100 &&
-      mouseX < btnX + 100 + btnW &&
-      mouseY > btnY &&
-      mouseY < btnY + btnH
+      mouseX > 400 + 100 &&
+      mouseX < 400 + 100 + 200 &&
+      mouseY > 350 &&
+      mouseY < 350 + 80
     ) {
       estado = "inicio";
       contador = 0;
@@ -318,49 +309,79 @@ function mousePressed() {
 }
 
 
+//=================================================================
 function resalta_personaje(x1,y1,x2,y2){
-  let cordx1 = x1
-  let cordx2 = x2
-  let cordy1 = y1
-  let cordy2 = y2 
-
+  //let cordx1 = x1, cordx2 = x2, cordy1 = y1, cordy2 = y2;
     stroke(0,0,150);
     fill(0,150,150,120);
-    rect(cordx1,cordy1,cordx2,cordy2);
+    //rect(cordx1,cordy1,cordx2,cordy2);
+    rect(x1,y1,x2,y2);
   }
 
+
+//=================================================================  
 function aleatorio_personajes(){
-      personaje1 = floor(random(coordenadas.length));
-
-      personaje2 = floor(random(coordenadas.length));
-      while (personaje2 === personaje1) {
-        personaje2 = floor(random(coordenadas.length));}
-      
-      personaje3 = floor(random(coordenadas.length));
-      while ((personaje3 === personaje2)||(personaje3 === personaje1)){
-        personaje3 = floor(random(coordenadas.length));}
-      
-      personaje4 = floor(random(coordenadas.length));
-      while ((personaje4 === personaje3)||(personaje4 === personaje2)||(personaje4 === personaje1)){
-        personaje4 = floor(random(coordenadas.length));}
-
-      personaje5 = floor(random(coordenadas.length));
-      while ((personaje5 === personaje4)||(personaje5 === personaje3)||(personaje5 === personaje2)||(personaje5 === personaje1)){
-        personaje5 = floor(random(coordenadas.length));}
-}  
-
-/*function mouseClicked() {
-  // cada clic se guarda en el arreglo
-  clicks.push({x: mouseX, y: mouseY});
-}
+      index_per_1 = floor(random(coordenadas.length));
+      index_per_2 = floor(random(coordenadas.length));
+      while (index_per_2 === index_per_1) {
+        index_per_2 = floor(random(coordenadas.length));}
+      index_per_3 = floor(random(coordenadas.length));
+      while ((index_per_3 === index_per_2)||(index_per_3 === index_per_1)){
+        index_per_3 = floor(random(coordenadas.length));}
+      index_per_4 = floor(random(coordenadas.length));
+      while ((index_per_4 === index_per_3)||(index_per_4 === index_per_2)||(index_per_4 === index_per_1)){
+        index_per_4 = floor(random(coordenadas.length));}
+      index_per_5 = floor(random(coordenadas.length));
+      while ((index_per_5 === index_per_4)||(index_per_5 === index_per_3)||(index_per_5 === index_per_2)||(index_per_5 === index_per_1)){
+        index_per_5 = floor(random(coordenadas.length));}
+      }
 
 
-  noStroke();
-  fill(150,10,250);
-    for (let i = 0; i < clicks.length; i++) {
-      if (mouseX > homerx && mouseX < (homerx+homerx2) && mouseY > homery && mouseY < (homery+homery2)){
-  stroke(200,0,0);
-  fill(0,150,150,120);
-  rect(homerx,homery,homerx2,homery2);
-  }
-  }*/
+//=================================================================
+function revisa_posicion(personaje){
+        let posx, posy, enco;
+        switch (personaje) {
+        case 1:
+          posx = coordX_per_1;
+          posy = coordY_per_1;
+          enco = encontrado1;
+        break;
+        case 2:
+          posx = coordX_per_2;
+          posy = coordY_per_2;
+          enco = encontrado2;
+        break;
+        case 3:
+          posx = coordX_per_3;
+          posy = coordY_per_3;
+          enco = encontrado3;
+        break;
+        case 4:
+          posx = coordX_per_4;
+          posy = coordY_per_4;
+          enco = encontrado4;   
+        break;
+        case 5:
+          posx = coordX_per_5;
+          posy = coordY_per_5;
+          enco = encontrado5;   
+        break;
+        default:  
+        }
+
+      if (
+      mouseX > posx &&
+      mouseX < posx + rectwidth &&
+      mouseY > posy &&
+      mouseY < posy + rectheight
+      )
+      {
+        if(enco==0){
+          enco=1;
+          contador+=1;}
+        /*if(contador===5){
+          estado="resultado";
+          sonido.play();}*/
+        }
+      return enco;
+      }
